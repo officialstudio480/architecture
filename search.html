@@ -1,0 +1,275 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SEARCH | ARCHI SUPPORT</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+JP:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<!-- このページの内容を編集するときは、このHTMLファイルを開いてください。 -->
+
+<header class="site-header">
+  <div class="container header-inner">
+    <a class="logo" href="index.html">
+      <span class="logo-mark">A</span>
+      <span>ARCHI SUPPORT</span>
+    </a>
+
+    <button class="menu-toggle" id="menuToggle" aria-label="メニュー" aria-expanded="false">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+
+    <nav class="main-nav" id="mainNav">
+      <a href="scale.html">縮尺計算</a>
+      <a href="calculator.html">建築計算</a>
+      <a href="law.html">法令検索</a>
+      <a href="materials.html">素材検索</a>
+      <a href="search.html">SEARCH</a>
+      <a href="about.html">ABOUT</a>
+    </nav>
+  </div>
+</header>
+
+<main class="container page">
+  <div class="page-heading">
+    <p class="eyebrow">SITE SEARCH</p>
+    <h1>サイト内検索</h1>
+    <p>建築サポート内のツール・法令・素材をまとめて検索できます。</p>
+  </div>
+
+  <section class="global-search">
+    <form id="searchForm" class="global-search-form">
+      <input id="globalQuery" type="search" placeholder="例：採光、木材、容積率、縮尺" autocomplete="off">
+      <button class="hero-button" type="submit">
+        <span>検索</span>
+        <span>→</span>
+      </button>
+    </form>
+  </section>
+
+  <!-- よく使う素材カテゴリ。
+       ボタンを押すだけで、そのカテゴリの検索結果を表示します。 -->
+  <section class="quick-search">
+    <p class="quick-search-label">MATERIALS</p>
+    <div class="quick-search-list">
+      <button type="button" class="quick-search-button" data-query="コンクリート">コンクリート</button>
+      <button type="button" class="quick-search-button" data-query="木材">木材</button>
+      <button type="button" class="quick-search-button" data-query="石">石</button>
+      <button type="button" class="quick-search-button" data-query="タイル">タイル</button>
+      <button type="button" class="quick-search-button" data-query="金属">金属</button>
+      <button type="button" class="quick-search-button" data-query="ガラス">ガラス</button>
+    </div>
+  </section>
+
+  <!-- 法令もジャンルから選べるようにしています。 -->
+  <section class="quick-search">
+    <p class="quick-search-label">LAWS</p>
+    <div class="quick-search-list">
+      <button type="button" class="quick-search-button law-category-button" data-category="用途・地域">用途・地域</button>
+      <button type="button" class="quick-search-button law-category-button" data-category="面積・規模">面積・規模</button>
+      <button type="button" class="quick-search-button law-category-button" data-category="採光・換気">採光・換気</button>
+      <button type="button" class="quick-search-button law-category-button" data-category="避難・安全">避難・安全</button>
+      <button type="button" class="quick-search-button law-category-button" data-category="防火・消防">防火・消防</button>
+      <button type="button" class="quick-search-button law-category-button" data-category="都市計画・高さ">都市計画・高さ</button>
+    </div>
+  </section>
+
+  <p id="searchCount" class="result-count"></p>
+  <div id="searchResults" class="card-grid"></div>
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    ARCHI SUPPORT
+    <div class="footer-links">
+      <a href="index.html">ホーム</a>
+      <a href="about.html">ABOUT</a>
+      <a href="scale.html">縮尺計算</a>
+      <a href="calculator.html">建築計算</a>
+      <a href="law.html">法令</a>
+      <a href="materials.html">素材</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // ========================================
+  // サイト内検索
+  // データを追加したい場合は、itemsの中に
+  // title / category / keywords / description / url
+  // を追加してください。
+  // ========================================
+
+  const items = [
+    {
+      title: "縮尺計算",
+      category: "TOOLS",
+      keywords: "縮尺 スケール 1/20 1/50 1/100 1/200 1/500 図面 実寸",
+      description: "実寸と図面上の寸法を変換できます。",
+      url: "scale.html"
+    },
+    {
+      title: "建築計算",
+      category: "TOOLS",
+      keywords: "面積 体積 坪 m2 m² 計算 建築",
+      description: "面積・体積・坪換算などの基本計算ができます。",
+      url: "calculator.html"
+    },
+    {
+      title: "法令検索",
+      category: "TOOLS",
+      keywords: "法令 建築基準法 用途地域 建ぺい率 容積率 採光 避難",
+      description: "建築課題で使う法令を検索できます。",
+      url: "law.html"
+    },
+    {
+      title: "素材検索",
+      category: "TOOLS",
+      keywords: "素材 木 石 コンクリート タイル 金属 パース",
+      description: "建築パース制作向けの素材を検索できます。",
+      url: "materials.html"
+    },
+
+    /* 法令 */
+    { title:"建築基準法", category:"用途・地域", keywords:"法令 建築物 構造 道路 用途制限", description:"建築物の敷地・構造・設備・用途などに関する基本法令。", url:"law.html?q=建築基準法" },
+    { title:"用途地域", category:"用途・地域", keywords:"法令 用途地域 住居 商業 工業", description:"土地の用途に応じて建築できる建物の種類などを定める制度。", url:"law.html?q=用途地域" },
+    { title:"建蔽率", category:"面積・規模", keywords:"法令 建ぺい率 建築面積 敷地面積", description:"敷地面積に対する建築面積の割合。", url:"law.html?q=建蔽率" },
+    { title:"容積率", category:"面積・規模", keywords:"法令 容積率 延べ面積 敷地面積", description:"敷地面積に対する延べ面積の割合。", url:"law.html?q=容積率" },
+    { title:"接道義務", category:"用途・地域", keywords:"法令 道路 接道 2m 敷地", description:"建築物の敷地と道路との関係を定める重要なルール。", url:"law.html?q=接道義務" },
+    { title:"採光", category:"採光・換気", keywords:"法令 採光 窓 居室 開口部", description:"居室の採光に関する規定。", url:"law.html?q=採光" },
+    { title:"換気", category:"採光・換気", keywords:"法令 換気 窓 換気設備 居室", description:"居室などの換気に関する規定。", url:"law.html?q=換気" },
+    { title:"階段", category:"避難・安全", keywords:"法令 階段 蹴上げ 踏面 手すり", description:"階段の寸法や構造などに関する規定。", url:"law.html?q=階段" },
+    { title:"廊下・避難経路", category:"避難・安全", keywords:"法令 廊下 避難 経路 幅", description:"廊下幅や避難に関係する規定を調べる入口。", url:"law.html?q=廊下" },
+    { title:"防火地域・準防火地域", category:"防火・消防", keywords:"法令 防火 準防火 耐火", description:"市街地の防火上の規制に関する制度。", url:"law.html?q=防火地域" },
+    { title:"バリアフリー法", category:"避難・安全", keywords:"法令 高齢者 障害者 移動 建築", description:"高齢者・障害者等の移動等の円滑化に関する法令。", url:"law.html?q=バリアフリー" },
+    { title:"消防法", category:"防火・消防", keywords:"法令 消防 火災 消火器 避難", description:"火災予防や消防用設備などに関する基本法令。", url:"law.html?q=消防法" },
+    { title:"都市計画法", category:"都市計画・高さ", keywords:"法令 都市計画 開発許可 区域", description:"都市計画や開発許可などに関する法令。", url:"law.html?q=都市計画法" },
+    { title:"日影規制", category:"都市計画・高さ", keywords:"法令 日影 日照 高さ", description:"建築物による日影の影響を抑えるための規制。", url:"law.html?q=日影規制" },
+    { title:"高さ制限", category:"都市計画・高さ", keywords:"法令 高さ 道路斜線 隣地斜線 北側斜線", description:"建築物の高さや斜線制限などを調べる入口。", url:"law.html?q=高さ制限" },
+
+    /* 素材 */
+    { title:"ナチュラルオーク", category:"素材", keywords:"木 木材 オーク フローリング 床", description:"明るく温かい印象の木質素材。", url:"materials.html?q=ナチュラルオーク" },
+    { title:"ウォールナット", category:"素材", keywords:"木 木材 ウォールナット 家具", description:"落ち着いた濃色の木材。", url:"materials.html?q=ウォールナット" },
+    { title:"杉板", category:"素材", keywords:"木 木材 杉 外壁 ルーバー", description:"外壁・ルーバー・内装などに。", url:"materials.html?q=杉板" },
+    { title:"打放しコンクリート", category:"素材", keywords:"コンクリート RC セメント 壁", description:"構造体を見せるミニマルな表現に。", url:"materials.html?q=打放しコンクリート" },
+    { title:"御影石", category:"素材", keywords:"石 天然石 granite 外壁 床", description:"外壁・床・カウンターなどに。", url:"materials.html?q=御影石" },
+    { title:"大理石", category:"素材", keywords:"石 天然石 marble 高級 床 壁", description:"床や壁のアクセントに。", url:"materials.html?q=大理石" },
+    { title:"磁器タイル", category:"素材", keywords:"タイル 磁器 床 外壁", description:"規則的な目地を持つ床・壁に。", url:"materials.html?q=磁器タイル" },
+    { title:"フローリング", category:"素材", keywords:"床 木 フローリング", description:"住宅・店舗の床表現に。", url:"materials.html?q=フローリング" },
+    { title:"モルタル", category:"素材", keywords:"モルタル グレー 壁 床", description:"左官仕上げらしいマットな質感。", url:"materials.html?q=モルタル" },
+    { title:"漆喰", category:"素材", keywords:"漆喰 白 壁 左官", description:"白く柔らかな壁面に。", url:"materials.html?q=漆喰" },
+    { title:"レンガ", category:"素材", keywords:"レンガ brick 外壁 壁", description:"外壁・内壁のアクセントに。", url:"materials.html?q=レンガ" },
+    { title:"ガルバリウム鋼板", category:"素材", keywords:"金属 鋼板 ガルバ 外壁 屋根", description:"外壁や屋根の金属質感に。", url:"materials.html?q=ガルバリウム鋼板" },
+    { title:"アルミ", category:"素材", keywords:"金属 アルミ サッシ", description:"サッシ・フレームなどに。", url:"materials.html?q=アルミ" },
+    { title:"ガラス", category:"素材", keywords:"ガラス 窓 カーテンウォール", description:"窓・カーテンウォールなどに。", url:"materials.html?q=ガラス" }
+  ];
+
+  const input = document.getElementById("globalQuery");
+  const form = document.getElementById("searchForm");
+  const results = document.getElementById("searchResults");
+  const count = document.getElementById("searchCount");
+
+  function renderSearch() {
+    const query = input.value.trim().toLowerCase();
+
+    if (!query) {
+      count.textContent = "キーワードを入力してください。";
+      results.innerHTML = "";
+      return;
+    }
+
+    const hits = items.filter(item => {
+      const text = [
+        item.title,
+        item.category,
+        item.keywords,
+        item.description
+      ].join(" ").toLowerCase();
+
+      return text.includes(query);
+    });
+
+    count.textContent = hits.length + "件";
+
+    results.innerHTML = hits.map(item => `
+      <article class="card">
+        <span class="tag">${item.category}</span>
+        <h2>${item.title}</h2>
+        <p>${item.description}</p>
+        <p class="muted">キーワード：${item.keywords}</p>
+        <a class="button secondary" href="${item.url}">この項目を見る →</a>
+      </article>
+    `).join("") || '<div class="empty">該当する項目がありません。</div>';
+  }
+
+  form.addEventListener("submit", (event) => {
+    event.preventDefault();
+    renderSearch();
+  });
+
+  input.addEventListener("input", renderSearch);
+
+  // 素材カテゴリのボタン
+  document.querySelectorAll(".quick-search-button").forEach((button) => {
+    button.addEventListener("click", () => {
+      input.value = button.dataset.query;
+      renderSearch();
+      input.focus();
+    });
+  });
+
+  // 法令ジャンルを押した場合は、そのジャンルの項目だけを表示します。
+  document.querySelectorAll(".law-category-button").forEach((button) => {
+    button.addEventListener("click", () => {
+      const category = button.dataset.category;
+      input.value = "";
+      const hits = items.filter(item => item.category === category);
+
+      count.textContent = category + "：" + hits.length + "件";
+      results.innerHTML = hits.map(item => `
+        <article class="card">
+          <span class="tag">${item.category}</span>
+          <h2>${item.title}</h2>
+          <p>${item.description}</p>
+          <p class="muted">キーワード：${item.keywords}</p>
+          <a class="button secondary" href="${item.url}">この項目を見る →</a>
+        </article>
+      `).join("") || '<div class="empty">該当する法令がありません。</div>';
+    });
+  });
+
+  // URLに ?q=採光 のように入ってきた場合も検索できます。
+  const urlQuery = new URLSearchParams(location.search).get("q");
+  if (urlQuery) {
+    input.value = urlQuery;
+    renderSearch();
+  }
+</script>
+
+<script>
+  // スマートフォン用ハンバーガーメニュー
+  const menuButton = document.getElementById("menuToggle");
+  const mainNav = document.getElementById("mainNav");
+
+  if (menuButton && mainNav) {
+    menuButton.addEventListener("click", () => {
+      const isOpen = mainNav.classList.toggle("open");
+      menuButton.setAttribute("aria-expanded", isOpen);
+    });
+
+    mainNav.querySelectorAll("a").forEach((link) => {
+      link.addEventListener("click", () => {
+        mainNav.classList.remove("open");
+        menuButton.setAttribute("aria-expanded", "false");
+      });
+    });
+  }
+</script>
+</body>
+</html>
