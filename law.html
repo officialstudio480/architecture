@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>法令検索 | 建築ラボ</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container header-inner">
+    <a class="logo" href="index.html">
+      <span class="logo-mark"><img src="IMG/logo.png" alt=""></span>
+      <span>建築ラボ</span>
+    </a>
+
+    <!-- PCでは各機能を直接表示。スマホではハンバーガーにまとめます。 -->
+    <button class="menu-toggle" id="menuToggle" aria-label="メニュー" aria-expanded="false">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+
+    <nav class="main-nav" id="mainNav">
+      <a href="scale.html">縮尺計算</a>
+      <a href="calculator.html">建築計算</a>
+      <a href="law.html">法令検索</a>
+      <a href="materials.html">素材検索</a>
+      <a href="search.html">SEARCH</a>
+      <a href="about.html">ABOUT</a>
+    </nav>
+  </div>
+</header>
+
+<main class="container page">
+
+  <div class="page-heading">
+    <p class="eyebrow">LAW SEARCH</p>
+    <h1>建築法令を検索</h1>
+    <p>建築学生がよく調べる法令・条文をキーワードから探せます。</p>
+  </div>
+
+  <section class="search-box">
+    <input id="lawSearch" type="search" placeholder="例：採光、避難階段、容積率、用途地域">
+    <select id="lawCategory">
+      <option value="">すべての分野</option>
+      <option value="建築基準法">建築基準法</option>
+      <option value="都市計画">都市計画</option>
+      <option value="消防">消防</option>
+      <option value="バリアフリー">バリアフリー</option>
+    </select>
+  </section>
+
+  <p id="lawCount" class="result-count"></p>
+  <div id="lawResults" class="card-grid"></div>
+
+  <div class="notice">
+    <strong>注意</strong>
+    <p>この検索結果は学習用の入口です。実際の設計・申請では必ず最新の法令本文や自治体の条例等を確認してください。</p>
+  </div>
+
+</main>
+
+<script>
+/*
+  法令データ
+  q の内容を変更すると、Google検索の検索ワードを変更できます。
+*/
+const laws = [
+  {name:"建築基準法", category:"建築基準法", keywords:"建築物 構造 道路 用途制限", desc:"建築物の敷地・構造・設備・用途などに関する基本法令。", q:"建築基準法"},
+  {name:"用途地域", category:"都市計画", keywords:"用途地域 第一種低層 住居 商業 工業", desc:"土地の用途に応じて建築できる建物の種類などを定める制度。", q:"用途地域 建築"},
+  {name:"建蔽率", category:"建築基準法", keywords:"建ぺい率 建築面積 敷地面積", desc:"敷地面積に対する建築面積の割合。", q:"建築基準法 建蔽率"},
+  {name:"容積率", category:"建築基準法", keywords:"容積率 延べ面積 敷地面積", desc:"敷地面積に対する延べ面積の割合。", q:"建築基準法 容積率"},
+  {name:"接道義務", category:"建築基準法", keywords:"道路 接道 2m 敷地", desc:"建築物の敷地と道路との関係を定める重要なルール。", q:"建築基準法 接道義務"},
+  {name:"採光", category:"建築基準法", keywords:"採光 窓 居室 開口部", desc:"居室の採光に関する規定。", q:"建築基準法 採光"},
+  {name:"換気", category:"建築基準法", keywords:"換気 窓 換気設備 居室", desc:"居室などの換気に関する規定。", q:"建築基準法 換気"},
+  {name:"階段", category:"建築基準法", keywords:"階段 蹴上げ 踏面 手すり", desc:"階段の寸法や構造などに関する規定。", q:"建築基準法 階段 蹴上げ 踏面"},
+  {name:"廊下・避難経路", category:"建築基準法", keywords:"廊下 避難 避難経路 幅", desc:"廊下幅や避難に関係する規定を調べる入口。", q:"建築基準法 廊下 避難"},
+  {name:"防火地域・準防火地域", category:"建築基準法", keywords:"防火 準防火 耐火 防火地域", desc:"市街地の防火上の規制に関する制度。", q:"防火地域 準防火地域 建築"},
+  {name:"バリアフリー法", category:"バリアフリー", keywords:"バリアフリー 高齢者 障害者 建築", desc:"高齢者・障害者等の移動等の円滑化に関する法令。", q:"バリアフリー法 建築"},
+  {name:"消防法", category:"消防", keywords:"消防 火災 消火器 避難 防火", desc:"火災予防や消防用設備などに関する基本法令。", q:"消防法 建築"},
+  {name:"都市計画法", category:"都市計画", keywords:"都市計画 開発許可 区域 市街化", desc:"都市計画や開発許可などに関する法令。", q:"都市計画法 建築"},
+  {name:"日影規制", category:"建築基準法", keywords:"日影 日照 高さ制限 冬至", desc:"建築物による日影の影響を抑えるための規制。", q:"建築基準法 日影規制"},
+  {name:"高さ制限", category:"建築基準法", keywords:"高さ 道路斜線 隣地斜線 北側斜線", desc:"建築物の高さや斜線制限などを調べる入口。", q:"建築基準法 高さ制限 斜線"}
+];
+
+const esc = s => s.replace(/[&<>"']/g, c => ({
+  '&':'&amp;',
+  '<':'&lt;',
+  '>':'&gt;',
+  '"':'&quot;',
+  "'":'&#39;'
+}[c]));
+
+function renderLaws(){
+  const word = document.getElementById("lawSearch").value.trim().toLowerCase();
+  const cat = document.getElementById("lawCategory").value;
+
+  const hits = laws.filter(x => {
+    const hay = `${x.name} ${x.category} ${x.keywords} ${x.desc}`.toLowerCase();
+    return (!word || hay.includes(word)) && (!cat || x.category === cat);
+  });
+
+  document.getElementById("lawCount").textContent = `${hits.length}件`;
+
+  document.getElementById("lawResults").innerHTML =
+    hits.map(x => `
+      <article class="card">
+        <span class="tag">${esc(x.category)}</span>
+        <h2>${esc(x.name)}</h2>
+        <p>${esc(x.desc)}</p>
+        <p class="muted">キーワード：${esc(x.keywords)}</p>
+
+        <!-- この項目専用のGoogle検索ボタン -->
+        <a class="button secondary"
+           target="_blank"
+           rel="noopener"
+           href="https://www.google.com/search?q=${encodeURIComponent(x.q + ' e-Gov')}">
+          最新の法令を確認 ↗
+        </a>
+      </article>
+    `).join("")
+    || `<div class="empty">該当する法令がありません。別のキーワードを試してください。</div>`;
+}
+
+document.getElementById("lawSearch").addEventListener("input", renderLaws);
+document.getElementById("lawCategory").addEventListener("change", renderLaws);
+renderLaws();
+</script>
+
+<script>
+  // スマートフォン用ハンバーガーメニュー
+  const menuButton = document.getElementById("menuToggle");
+  const mainNav = document.getElementById("mainNav");
+
+  if (menuButton && mainNav) {
+    menuButton.addEventListener("click", () => {
+      const isOpen = mainNav.classList.toggle("open");
+      menuButton.setAttribute("aria-expanded", isOpen);
+    });
+
+    mainNav.querySelectorAll("a").forEach((link) => {
+      link.addEventListener("click", () => {
+        mainNav.classList.remove("open");
+        menuButton.setAttribute("aria-expanded", "false");
+      });
+    });
+  }
+  
+</script>
+
+</body>
+</html>
