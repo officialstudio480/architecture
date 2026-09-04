@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>建築計算 | 建築ラボ</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+JP:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .tool-intro{max-width:780px;margin:0 0 28px}
+    .tool-nav{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 30px}
+    .tool-nav a{display:inline-flex;padding:9px 13px;border:1px solid rgba(0,0,0,.12);border-radius:999px;text-decoration:none;font-size:.82rem;color:inherit;background:rgba(255,255,255,.65)}
+    .tool-nav a:hover{transform:translateY(-1px)}
+    .tool-card-wide{grid-column:1/-1}
+    .calc-form .two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .calc-form .field label{display:block;margin:0 0 7px}
+    .result{line-height:1.8;min-height:28px}
+    .result .big{font-size:1.25rem;font-weight:800}
+    .result .ok{font-weight:700}
+    .hint{font-size:.82rem;line-height:1.7;opacity:.68;margin-top:9px}
+    .dimension-list,.term-list{display:grid;gap:8px;margin-top:14px}
+    .dimension-item,.term-item{padding:12px 14px;border:1px solid rgba(0,0,0,.09);border-radius:10px;background:rgba(255,255,255,.45)}
+    .dimension-item strong,.term-item strong{display:block;margin-bottom:3px}
+    .search-row{display:flex;gap:8px}.search-row input{flex:1}
+    .copy-button{margin-top:10px}
+    .dimension-head{display:block;margin-bottom:18px}
+    .dimension-head h2{margin:0 0 6px;font-size:22px}
+    .dimension-head p{margin:0;color:var(--sub-text);font-size:14px}
+    .dimension-search{display:flex;gap:8px;margin-top:16px;width:min(760px,100%)}
+    .dimension-search input{flex:1;min-width:0;min-height:46px;padding:10px 14px;background:var(--surface);color:var(--text);border:1px solid #d5dae1;border-radius:8px;font:inherit}
+    .dimension-search input:focus{outline:2px solid rgba(49,95,232,.16);border-color:var(--accent)}
+    .dimension-filters{display:flex;flex-wrap:wrap;gap:7px;margin:0 0 18px}
+    .dimension-filter{border:1px solid var(--border);background:var(--surface);color:var(--sub-text);border-radius:999px;padding:7px 12px;font:inherit;font-size:12px;cursor:pointer;transition:.15s}
+    .dimension-filter:hover,.dimension-filter.active{background:var(--text);color:var(--surface);border-color:var(--text)}
+    .dimension-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+    .dimension-card{position:relative;padding:18px;background:var(--surface);border:1px solid var(--border);border-radius:10px;transition:transform .15s ease,box-shadow .15s ease,border-color .15s ease}
+    .dimension-card:hover{transform:translateY(-2px);border-color:rgba(49,95,232,.3);box-shadow:0 8px 24px rgba(20,25,35,.06)}
+    .dimension-card-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:9px}
+    .dimension-category{font-size:10px;font-weight:700;color:var(--sub-text);letter-spacing:.06em}
+    .dimension-arrow{font-size:15px;color:var(--accent);line-height:1}
+    .dimension-card h3{margin:0 0 8px;font-size:17px}
+    .dimension-value{padding:10px 11px;background:#f6f7f9;border-radius:7px;border-left:3px solid var(--accent);margin-bottom:9px}
+    .dimension-value span{display:block;font-size:10px;color:var(--sub-text);margin-bottom:2px}
+    .dimension-value strong{display:block;font-size:13px;line-height:1.5}
+    .dimension-card p{margin:0;color:var(--sub-text);font-size:11px;line-height:1.6}
+    .dimension-card details{margin-top:9px;border-top:1px solid var(--border);padding-top:8px}
+    .dimension-card summary{cursor:pointer;font-size:11px;color:var(--text);font-weight:600;list-style:none}
+    .dimension-card summary::-webkit-details-marker{display:none}
+    .dimension-card summary:after{content:'＋';float:right;color:var(--sub-text)}
+    .dimension-card details[open] summary:after{content:'−'}
+    .dimension-card .detail-text{margin-top:7px;font-size:11px;line-height:1.7;color:var(--sub-text)}
+    .dimension-empty{grid-column:1/-1;padding:32px;text-align:center;border:1px dashed var(--border);border-radius:10px;color:var(--sub-text);background:var(--surface)}
+    .optional-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}
+    .optional-grid label{display:block;margin:0 0 7px;font-size:12px}
+    .optional-grid input{width:100%}
+    .result .warn{font-weight:700}
+    .source-note{margin:10px 0 0;padding:14px 16px;border:1px solid var(--border);border-radius:10px;background:rgba(255,255,255,.58);font-size:12px;line-height:1.7;color:var(--sub-text)}
+    .source-note strong{color:var(--text)}
+    .source-note p{margin:4px 0 6px}
+    .source-note a{color:var(--text);font-weight:700}
+    @media(max-width:700px){.optional-grid{grid-template-columns:1fr}}
+
+    @media(max-width:900px){.dimension-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+    @media(max-width:700px){.calc-form .two{grid-template-columns:1fr}.tool-card-wide{grid-column:auto}.search-row{flex-direction:column}.dimension-grid{grid-template-columns:1fr}.dimension-search{flex-direction:column}.dimension-search .button{width:100%}}
+  </style>
+</head>
+<body>
+<header class="site-header">
+  <div class="container header-inner">
+    <a class="logo" href="index.html"><span class="logo-mark"><img src="IMG/logo.png" alt=""></span><span>建築ラボ</span></a>
+    <button class="menu-toggle" id="menuToggle" aria-label="メニュー" aria-expanded="false"><span></span><span></span><span></span></button>
+    <nav class="main-nav" id="mainNav">
+      <a href="scale.html">縮尺計算</a><a href="calculator.html">建築計算</a><a href="law.html">法令検索</a><a href="materials.html">素材検索</a><a href="search.html">SEARCH</a><a href="about.html">ABOUT</a>
+    </nav>
+  </div>
+</header>
+
+<main class="container page">
+  <div class="page-heading">
+    <p class="eyebrow">ARCHITECTURE TOOLS</p>
+    <h1>建築計算</h1>
+    <p class="tool-intro">建築課題でよく使う計算・寸法・用語検索を、ひとつのページにまとめました。</p>
+  </div>
+
+  <nav class="tool-nav" aria-label="計算ツール一覧">
+    <a href="#basic">基本計算</a><a href="#planning">計画・法規</a><a href="#dimension">必要寸法</a><a href="#unit">単位変換</a><a href="#dictionary">用語</a><a href="law.html">法令検索</a><a href="materials.html">素材検索</a>
+  </nav>
+
+  <section id="basic" class="section" style="padding-top:0">
+    <p class="section-label">01 / BASIC</p>
+    <div class="card-grid">
+      <section class="card"><h2>面積</h2><div class="calc-form"><div class="two"><div class="field"><label for="areaW">幅（m）</label><input id="areaW" type="number" step="any" min="0" placeholder="例：8.4"></div><div class="field"><label for="areaD">奥行（m）</label><input id="areaD" type="number" step="any" min="0" placeholder="例：6.2"></div></div><button class="button" onclick="calcArea()">計算</button><div class="result" id="areaResult">—</div></div></section>
+      <section class="card"><h2>体積</h2><div class="calc-form"><div class="two"><div class="field"><label for="volW">幅（m）</label><input id="volW" type="number" step="any" min="0"></div><div class="field"><label for="volD">奥行（m）</label><input id="volD" type="number" step="any" min="0"></div></div><label for="volH" style="margin-top:12px;display:block">高さ（m）</label><input id="volH" type="number" step="any" min="0"><button class="button" onclick="calcVolume()">計算</button><div class="result" id="volResult">—</div></div></section>
+      <section class="card"><h2>m²・坪</h2><div class="calc-form"><label for="areaTsubo">面積（m²）</label><input id="areaTsubo" type="number" step="any" min="0" placeholder="例：100"><button class="button" onclick="calcTsubo()">坪に換算</button><div class="result" id="tsuboResult">—</div></div></section>
+    </div>
+  </section>
+
+  <section id="planning" class="section">
+    <p class="section-label">02 / PLANNING</p>
+    <div class="card-grid">
+      <section class="card"><h2>建ぺい率・容積率</h2><div class="calc-form"><label for="siteArea">敷地面積（m²）</label><input id="siteArea" type="number" step="any" min="0" placeholder="例：200"><label for="buildingArea" style="margin-top:12px;display:block">建築面積（m²）</label><input id="buildingArea" type="number" step="any" min="0" placeholder="例：80"><label for="totalArea" style="margin-top:12px;display:block">延べ面積（m²）</label><input id="totalArea" type="number" step="any" min="0" placeholder="例：160"><div class="optional-grid"><div><label for="buildingLimit">指定建ぺい率（%・任意）</label><input id="buildingLimit" type="number" step="any" min="0" placeholder="例：60"></div><div><label for="floorLimit">指定容積率（%・任意）</label><input id="floorLimit" type="number" step="any" min="0" placeholder="例：200"></div></div><button class="button" onclick="calcRates()">計算</button><div class="result" id="ratesResult">—</div><p class="hint">実際の法定上限は、指定率だけでなく前面道路幅員などの条件でも変わります。この機能は入力値からの単純な割合チェックです。</p></div></section>
+
+      <section class="card"><h2>階段計算</h2><div class="calc-form"><label for="stairType">用途・基準の目安</label><select id="stairType"><option value="other">一般（上記以外）</option><option value="housing">住宅の住戸内</option><option value="large">多数の者が利用・大規模用途等</option><option value="school">学校・劇場・集会場等</option><option value="elementary">小学校の児童用</option></select><label for="floorHeight" style="margin-top:12px;display:block">階高（mm）</label><input id="floorHeight" type="number" step="any" min="1" placeholder="例：2800"><label for="riserInput" style="margin-top:12px;display:block">目標蹴上（mm）</label><input id="riserInput" type="number" step="any" min="1" placeholder="例：175"><label for="treadInput" style="margin-top:12px;display:block">踏面（mm）</label><input id="treadInput" type="number" step="any" min="1" placeholder="例：250"><button class="button" onclick="calcStair()">計算</button><div class="result" id="stairResult">—</div><p class="hint">段数・蹴上・踏面を計算し、選択した用途の代表的な基準値と比較します。実際の適用条件は法令・条例を確認してください。</p></div></section>
+
+      <section class="card"><h2>採光の簡易チェック</h2><div class="calc-form"><label for="windowArea">採光に有効な開口面積（m²）</label><input id="windowArea" type="number" step="any" min="0" placeholder="例：8"><label for="floorArea" style="margin-top:12px;display:block">居室の床面積（m²）</label><input id="floorArea" type="number" step="any" min="0" placeholder="例：50"><label for="daylightTarget" style="margin-top:12px;display:block">比較基準</label><select id="daylightTarget"><option value="14.285714285714">原則 1/7（約14.29%）</option><option value="10">一定条件下の 1/10（10%）</option></select><button class="button" onclick="calcDaylight()">計算</button><div class="result" id="daylightResult">—</div><p class="hint">住宅の居室は原則1/7以上で、一定条件下では1/10以上まで緩和可能です。ただし、この機能は開口面積÷床面積の比較だけを行い、法令上の採光判定はしません。</p></div></section>
+
+      <section class="card"><h2>日影・影の長さ</h2><div class="calc-form"><label for="shadowHeight">建物高さ（m）</label><input id="shadowHeight" type="number" step="any" min="0" placeholder="例：10"><label for="solarAltitude" style="margin-top:12px;display:block">太陽高度（°）</label><input id="solarAltitude" type="number" step="any" min="0.1" max="89.9" placeholder="例：30"><button class="button" onclick="calcShadow()">計算</button><div class="result" id="shadowResult">—</div><p class="hint">水平な地面に対する単純な影の長さです。日影規制は、区域・対象建築物・測定面・時間等を含めて別途確認します。</p></div></section>
+    </div>
+  </section>
+
+  <section id="dimension" class="section">
+    <p class="section-label">03 / DIMENSIONS</p>
+    <div class="dimension-head">
+      <div><h2>必要寸法</h2><p>建築計画でよく確認する寸法を、用途からすぐ探せます。</p></div>
+      <div class="dimension-search"><input id="dimensionQuery" type="search" placeholder="例：廊下・車いす・ドア" aria-label="必要寸法を検索"><button class="button" onclick="searchDimensions()">検索</button></div>
+    </div>
+    <div class="dimension-filters" aria-label="必要寸法の分類">
+      <button class="dimension-filter active" data-filter="all" onclick="filterDimensions('all',this)">すべて</button>
+      <button class="dimension-filter" data-filter="動線" onclick="filterDimensions('動線',this)">動線</button>
+      <button class="dimension-filter" data-filter="階段" onclick="filterDimensions('階段',this)">階段</button>
+      <button class="dimension-filter" data-filter="建具" onclick="filterDimensions('建具',this)">建具</button>
+      <button class="dimension-filter" data-filter="水回り" onclick="filterDimensions('水回り',this)">水回り</button>
+      <button class="dimension-filter" data-filter="構造" onclick="filterDimensions('構造',this)">構造</button>
+      <button class="dimension-filter" data-filter="車" onclick="filterDimensions('車',this)">駐車・搬入</button>
+    </div>
+    <div id="dimensionResult" class="dimension-grid"></div>
+  </section>
+
+  <section id="unit" class="section">
+    <p class="section-label">04 / UNIT</p>
+    <div class="card-grid">
+      <section class="card tool-card-wide"><h2>単位変換</h2><div class="calc-form"><div class="two"><div class="field"><label for="unitValue">数値</label><input id="unitValue" type="number" step="any"></div><div class="field"><label for="unitMode">変換</label><select id="unitMode"><option value="mm-cm">mm → cm</option><option value="cm-mm">cm → mm</option><option value="cm-m">cm → m</option><option value="m-cm">m → cm</option><option value="m-mm">m → mm</option><option value="mm-m">mm → m</option><option value="m2-tsubo">m² → 坪</option><option value="tsubo-m2">坪 → m²</option><option value="m3-l">m³ → L</option><option value="l-m3">L → m³</option></select></div></div><button class="button" onclick="convertUnit()">変換</button><div class="result" id="unitResult">—</div></div></section>
+    </div>
+  </section>
+
+  <section id="dictionary" class="section">
+    <p class="section-label">05 / DICTIONARY</p>
+    <div class="card-grid">
+      <section class="card"><h2>建築用語</h2><p>図面や課題で出てくる基本用語を検索できます。</p><div class="search-row"><input id="termQuery" type="search" placeholder="例：スパン、GL、RC、矩計図"><button class="button" onclick="searchTerms()">検索</button></div><div id="termResult" class="term-list"></div></section>
+      <section class="card"><h2>法令検索</h2><p>建築基準法などを確認するときの入口です。</p><a class="button secondary" href="law.html">法令検索を開く →</a><p class="hint">法令・条例は改正されるため、最終確認は必ず公的な最新資料で行ってください。</p></section>
+      <section class="card"><h2>素材検索</h2><p>木・石・コンクリート・金属など、建築パースや資料作成に使える素材を探します。</p><a class="button secondary" href="materials.html">素材検索を開く →</a></section>
+      <section class="card"><h2>縮尺計算</h2><p>図面の縮尺変換は専用ツールで計算できます。</p><a class="button secondary" href="scale.html">縮尺計算を開く →</a></section>
+    </div>
+  </section>
+
+  <div class="source-note"><strong>法令確認の参考</strong><p>採光・階段・日影などの法令条件は、用途や地域、条例等で変わります。最新の公的資料で確認してください。</p><a href="https://www.mlit.go.jp/" target="_blank" rel="noopener">国土交通省</a></div><p class="muted" style="margin-top:24px">※このページの計算は学習・設計検討用です。法令適合、確認申請、構造安全性などの最終判断を代替するものではありません。</p>
+</main>
+
+<footer class="site-footer"><div class="container">建築ラボ<div class="footer-links"><a href="index.html">ホーム</a><a href="about.html">ABOUT</a><a href="scale.html">縮尺計算</a><a href="calculator.html">建築計算</a><a href="law.html">法令</a><a href="materials.html">素材</a></div></div></footer>
+
+<script>
+const $=id=>document.getElementById(id);
+const n=id=>Number($(id).value);
+const fmt=x=>Number.isFinite(x)?x.toLocaleString('ja-JP',{maximumFractionDigits:3}):'—';
+const valid=(...v)=>v.every(x=>Number.isFinite(x)&&x>=0);
+function calcArea(){const w=n('areaW'),d=n('areaD');if(!valid(w,d)||w===0||d===0){$('areaResult').textContent='幅と奥行を入力してください。';return;}$('areaResult').innerHTML=`<span class="big">${fmt(w*d)} m²</span><br>＝ ${fmt(w*d*10000)} cm²`}
+function calcVolume(){const w=n('volW'),d=n('volD'),h=n('volH');if(!valid(w,d,h)||w===0||d===0||h===0){$('volResult').textContent='幅・奥行・高さを入力してください。';return;}const v=w*d*h;$('volResult').innerHTML=`<span class="big">${fmt(v)} m³</span><br>＝ ${fmt(v*1000)} L`}
+function calcTsubo(){const a=n('areaTsubo');if(!Number.isFinite(a)||a<0){$('tsuboResult').textContent='面積を入力してください。';return;}$('tsuboResult').innerHTML=`<span class="big">約 ${fmt(a/3.305785)} 坪</span><br>1坪 ≒ 3.305785 m²`}
+function calcRates(){const s=n('siteArea'),b=n('buildingArea'),t=n('totalArea'),bl=n('buildingLimit'),fl=n('floorLimit');if(!valid(s,b,t)||s<=0||b<0||t<0){$('ratesResult').textContent='敷地・建築・延べ面積を正しく入力してください。';return;}const c=b/s*100,v=t/s*100;let msg=`<span class="big">建ぺい率 ${fmt(c)} %</span><br><span class="big">容積率 ${fmt(v)} %</span>`;if(b>s||t<s)msg+=`<br><span class="warn">入力値の関係を確認してください。建築面積が敷地面積を超えていないか、延べ面積が敷地面積より極端に小さくなっていないか確認します。</span>`;if(Number.isFinite(bl)&&bl>0)msg+=`<br>指定建ぺい率 ${fmt(bl)} % → <span class="${c<=bl?'ok':'warn'}">${c<=bl?'上限以内':'上限超過'}</span>`;if(Number.isFinite(fl)&&fl>0)msg+=`<br>指定容積率 ${fmt(fl)} % → <span class="${v<=fl?'ok':'warn'}">${v<=fl?'上限以内':'上限超過'}</span>`;$('ratesResult').innerHTML=msg}
+function calcStair(){const h=n('floorHeight'),target=n('riserInput'),t=n('treadInput');if(!valid(h,target,t)||h<=0||target<=0||t<=0){$('stairResult').textContent='階高・目標蹴上・踏面を正しく入力してください。';return;}const standards={other:{riser:220,tread:210,width:750,label:'一般（上記以外）'},housing:{riser:230,tread:150,width:750,label:'住宅の住戸内'},large:{riser:200,tread:240,width:1200,label:'多数の者が利用・大規模用途等'},school:{riser:180,tread:260,width:1400,label:'学校・劇場・集会場等'},elementary:{riser:160,tread:260,width:1400,label:'小学校の児童用'}};const st=standards[$('stairType').value];const steps=Math.max(1,Math.round(h/target));const r=h/steps;const treadCount=Math.max(steps-1,0);const run=treadCount*t;const comfort=2*r+t;const slope=r/t;const riserOK=r<=st.riser;const treadOK=t>=st.tread;const comfortOK=comfort>=550&&comfort<=650;let status=`<br>2R+T：${fmt(comfort)} mm → <span class="${comfortOK?'ok':'warn'}">${comfortOK?'550〜650mmの範囲':'範囲外'}</span>`;$('stairResult').innerHTML=`段数：<span class="big">${steps} 段</span><br>実際の蹴上：${fmt(r)} mm → <span class="${riserOK?'ok':'warn'}">${riserOK?'代表基準以内':'代表基準超過'}</span><br>踏面：${fmt(t)} mm → <span class="${treadOK?'ok':'warn'}">${treadOK?'代表基準以上':'代表基準未満'}</span><br>踏面数（直階段の簡易計算）：${treadCount} 段<br>水平距離：約 ${fmt(run)} mm<br>勾配：${fmt(slope)}（蹴上÷踏面）${status}<br><span class="hint">選択区分の代表値：蹴上 ${st.riser}mm以下・踏面 ${st.tread}mm以上・幅 ${st.width}mm以上。幅は未入力なので判定していません。用途の適用条件や踊場等は別途確認してください。</span>`}
+function calcDaylight(){const w=n('windowArea'),f=n('floorArea'),target=n('daylightTarget');if(!valid(w,f,target)||f<=0){$('daylightResult').textContent='開口面積・床面積を正しく入力してください。';return;}const ratio=w/f*100,need=f*target/100,ok=ratio>=target;const targetLabel=target<11?'1/10（10%）':'1/7（約14.29%）';$('daylightResult').innerHTML=`開口面積比：<span class="big">${fmt(ratio)} %</span><br>比較基準：${targetLabel}<br>必要な開口面積：${fmt(need)} m²<br><span class="${ok?'ok':'warn'}">${ok?'選択した比率以上です。':'選択した比率未満です。'}</span>`}
+function calcShadow(){const h=n('shadowHeight'),a=n('solarAltitude');if(!Number.isFinite(h)||h<=0||!Number.isFinite(a)||a<=0||a>=90){$('shadowResult').textContent='建物高さと0〜90°の太陽高度を入力してください。';return;}const len=h/Math.tan(a*Math.PI/180);$('shadowResult').innerHTML=`影の長さ：<span class="big">約 ${fmt(len)} m</span>`}
+const dimensions=[
+['廊下','計画幅','動線','用途・避難・バリアフリー条件で決定','固定値ではなく、用途・人数・避難経路・バリアフリー条件から有効幅を決めます。','廊下 通路 動線'],
+['階段','蹴上・踏面・幅','階段','代表値：75 / 120 / 140cmなど用途別に確認','建築基準法施行令23条などで階段の種類に応じた基準があります。用途を先に決めてから確認します。','階段 蹴上 踏面 幅'],
+['ドア','有効開口・扉軌跡','建具','有効開口幅＋扉の開閉範囲','家具搬入・避難・車いす利用を考え、開き戸の回転半径や引き戸の通行上有効な幅も図面で確認します。','ドア 扉 建具 開口'],
+['駐車場','車室・通路・切り返し','車','車種に合わせて設定','車幅だけで決めず、乗降・前面道路・切り返し・壁との離隔まで含めて計画します。','駐車場 車 車室'],
+['バリアフリー','有効幅・回転・段差','動線','用途・条例・経路条件で確認','移動等円滑化経路などの対象では、廊下・出入口・段差・手すり等に具体的な基準があります。用途と適用法令を確認します。','バリアフリー 車いす 回転'],
+['天井高さ','仕上げ面からの高さ','室内','構造・設備・用途から決定','梁せい、設備、照明、換気、建具との干渉を確認し、必要な天井ふところも検討します。','天井 高さ 梁 設備'],
+['柱スパン','柱間の距離','構造','用途・構造形式から設定','構造安全性だけでなく、梁せい、設備、部屋の使い方、駐車計画とのバランスで決めます。','スパン 柱 構造'],
+['家具搬入','通過寸法・曲がり角','車','最大寸法＋経路の余裕','入口だけでなく、廊下・扉・階段・エレベーター・曲がり角を連続して確認します。','家具 搬入 廊下'],
+['洗面・トイレ','設備寸法・動作範囲','水回り','設備＋人の動き＋扉の開閉','便器・洗面器の寸法だけでなく、立ち座り・介助・扉の軌跡を重ねて計画します。','トイレ 洗面 水回り']
+];
+let dimensionFilter='all';
+function renderDimensions(){const q=$('dimensionQuery').value.trim().toLowerCase();const hits=dimensions.filter(x=>{const text=(x[0]+' '+x[1]+' '+x[2]+' '+x[3]+' '+x[4]+' '+x[5]).toLowerCase();const matchesQuery=!q||text.includes(q);const matchesFilter=dimensionFilter==='all'||x[2]===dimensionFilter||x[5].includes(dimensionFilter);return matchesQuery&&matchesFilter});$('dimensionResult').innerHTML=hits.map(x=>`<article class="dimension-card"><div class="dimension-card-top"><span class="dimension-category">${x[2]}</span><span class="dimension-arrow">↗</span></div><h3>${x[0]}</h3><div class="dimension-value"><span>${x[1]}</span><strong>${x[3]}</strong></div><p>${x[4]}</p><details><summary>考え方を見る</summary><div class="detail-text">${x[4]}</div></details></article>`).join('')||'<div class="dimension-empty">該当する項目がありません。キーワードや分類を変えてください。</div>'}
+function searchDimensions(){renderDimensions()}
+function filterDimensions(filter,button){dimensionFilter=filter;document.querySelectorAll('.dimension-filter').forEach(b=>b.classList.remove('active'));button.classList.add('active');renderDimensions()}
+
+const terms={
+'スパン':'柱・壁などの支点間の距離。構造計画でよく使います。','梁':'床や屋根などからの荷重を支える横架材。','GL':'Ground Level。地盤面の基準を示す記号として使われます。','FL':'Floor Level。床の高さ・仕上げ面の基準を示す記号として使われます。','SL':'Slab Level。スラブの高さを示す記号として使われます。','RC':'Reinforced Concrete。鉄筋コンクリート造。','S造':'Steel。鉄骨造。','SRC造':'Steel Reinforced Concrete。鉄骨鉄筋コンクリート造。','耐力壁':'地震・風などの水平力に抵抗するための壁。','矩計図':'建物の断面、高さ、納まりなどを詳しく示す図面。','建ぺい率':'敷地面積に対する建築面積の割合。','容積率':'敷地面積に対する延べ面積の割合。','PS':'パイプスペース。給排水などの配管スペース。','EPS':'電気設備などの配線・配管スペースとして使われる区画。'};
+function searchTerms(){const q=$('termQuery').value.trim().toLowerCase();const hits=Object.entries(terms).filter(([k,v])=>(k+' '+v).toLowerCase().includes(q));$('termResult').innerHTML=hits.map(([k,v])=>`<div class="term-item"><strong>${k}</strong>${v}</div>`).join('')||'<div class="term-item">該当する用語がありません。</div>'}
+function convertUnit(){const v=n('unitValue');if(!Number.isFinite(v)){ $('unitResult').textContent='数値を入力してください。';return;}const m=$('unitMode').value;const map={'mm-cm':[v/10,'cm'],'cm-mm':[v*10,'mm'],'cm-m':[v/100,'m'],'m-cm':[v*100,'cm'],'m-mm':[v*1000,'mm'],'mm-m':[v/1000,'m'],'m2-tsubo':[v/3.305785,'坪'],'tsubo-m2':[v*3.305785,'m²'],'m3-l':[v*1000,'L'],'l-m3':[v/1000,'m³']};const r=map[m];$('unitResult').innerHTML=`<span class="big">${fmt(r[0])} ${r[1]}</span>`}
+searchDimensions();searchTerms();
+['areaW','areaD'].forEach(id=>$(id)?.addEventListener('keydown',e=>{if(e.key==='Enter')calcArea()}));
+['volW','volD','volH'].forEach(id=>$(id)?.addEventListener('keydown',e=>{if(e.key==='Enter')calcVolume()}));
+['siteArea','buildingArea','totalArea','buildingLimit','floorLimit'].forEach(id=>$(id)?.addEventListener('keydown',e=>{if(e.key==='Enter')calcRates()}));
+
+const menuButton=$('menuToggle'),mainNav=$('mainNav');if(menuButton&&mainNav){menuButton.addEventListener('click',()=>{const open=mainNav.classList.toggle('open');menuButton.setAttribute('aria-expanded',open);});mainNav.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{mainNav.classList.remove('open');menuButton.setAttribute('aria-expanded','false');}));}
+</script>
+</body>
+</html>
