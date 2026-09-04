@@ -1,0 +1,242 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="建築ノードは、縮尺計算、面積・体積、建ぺい率・容積率、法令検索、素材検索など、建築と住まいの確認に使える道具をまとめたサイトです。建築学生だけでなく、家づくりやDIYにも使えます。">
+  <meta name="robots" content="index, follow">
+  <meta name="author" content="建築ノード">
+  <link rel="canonical" href="index.html">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="建築ノード｜建築計算・縮尺・法令・住まいの便利ツール">
+  <meta property="og:description" content="建築ノードは、縮尺計算、面積・体積、建ぺい率・容積率、法令検索、素材検索など、建築と住まいの確認に使える道具をまとめたサイトです。建築学生だけでなく、家づくりやDIYにも使えます。">
+  <meta property="og:site_name" content="建築ノード">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="建築ノード｜建築計算・縮尺・法令・住まいの便利ツール">
+  <meta name="twitter:description" content="建築ノードは、縮尺計算、面積・体積、建ぺい率・容積率、法令検索、素材検索など、建築と住まいの確認に使える道具をまとめたサイトです。建築学生だけでなく、家づくりやDIYにも使えます。">
+  <meta name="theme-color" content="#f6f7f9">
+
+  <title>建築ノード｜建築計算・縮尺・法令・住まいの便利ツール</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Manrope:wght@400;500;600;700;800&family=Noto+Sans+JP:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <meta name="google-site-verification" content="N6YGUapl4HbMPXYP9mu6be3vtUVY6AoU1dfnUfCmM9Y" />
+<script type="application/ld+json">
+[
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "建築ノード",
+    "description": "建築ノードは、縮尺計算、面積・体積、建ぺい率・容積率、法令検索、素材検索など、建築と住まいの確認に使える道具をまとめたサイトです。建築学生だけでなく、家づくりやDIYにも使えます。",
+    "inLanguage": "ja"
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "name": "建築ノード｜建築計算・縮尺・法令・住まいの便利ツール",
+    "description": "建築ノードは、縮尺計算、面積・体積、建ぺい率・容積率、法令検索、素材検索など、建築と住まいの確認に使える道具をまとめたサイトです。建築学生だけでなく、家づくりやDIYにも使えます。",
+    "inLanguage": "ja"
+  }
+]
+  </script>
+</head>
+<body class="home-page">
+<!-- このページの内容を編集するときは、このHTMLファイルを開いてください。 -->
+
+<header class="site-header">
+  <div class="container header-inner">
+    <a class="logo" href="index.html">
+      <span class="logo-mark"><img src="IMG/logo.png" alt="建築ノード"></span>
+      <span>建築ノード</span>
+    </a>
+
+    <!-- PCでは各機能を直接表示。スマホではハンバーガーにまとめます。 -->
+    <button class="menu-toggle" id="menuToggle" aria-label="メニュー" aria-expanded="false">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+    <nav class="main-nav" id="mainNav" aria-label="メインナビゲーション">
+      <a href="tools.html">TOOLBOX</a>
+      <a href="search.html">検索</a>
+      <a href="plans.html">料金プラン</a>
+      <details class="nav-more">
+        <summary>その他</summary>
+        <div class="nav-more-panel">
+          <a href="scale.html">縮尺計算</a>
+          <a href="calculator.html">建築計算</a>
+          <a href="law.html">法令検索</a>
+          <a href="materials.html">素材検索</a>
+          <a href="about.html">ABOUT</a>
+          <a href="contact.html">CONTACT</a>
+          <a href="mypage.html">マイページ</a>
+        </div>
+      </details>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <section class="hero">
+    <div class="container">
+      <div class="hero-inner">
+        <p class="eyebrow">ARCHITECTURE TOOLS / FOR EVERYDAY USE</p>
+
+        <h1>
+          測る。考える。
+          <span class="accent">すぐわかる。</span>
+        </h1>
+
+        <p>
+          縮尺や面積の計算から、家づくりやDIYの確認まで。<br>
+          必要な道具を選んで、すぐ確かめられます。
+        </p>
+
+        <a class="hero-button" href="#tools">
+          <span>ツールを見る</span>
+          <span>→</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+<section class="section node-dashboard" aria-label="建築ノード クイックアクセス">
+    <div class="container">
+      <div class="node-dashboard-head">
+        <div>
+          <p class="section-label">NODE / QUICK ACCESS</p>
+          <h2>使いたい道具を、ここから選ぶ。</h2>
+        </div>
+        <form id="nodeQuickSearchForm" class="node-quick-search">
+          <input id="nodeQuickSearch" type="search" placeholder="例：採光、縮尺、木材" aria-label="建築ノードを検索" autocomplete="off">
+          <button type="submit" class="button">検索 →</button>
+        </form>
+      </div>
+      <div class="node-dashboard-grid">
+        <div class="node-dashboard-panel">
+          <div class="node-panel-head"><span>FAVORITES</span><a href="search.html">ツールを探す →</a></div>
+          <div id="nodeFavorites" class="node-mini-grid"></div>
+        </div>
+        <div class="node-dashboard-panel">
+          <div class="node-panel-head"><span>RECENT</span><a href="search.html">すべての検索 →</a></div>
+          <div id="nodeRecent" class="node-mini-grid"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="tools">
+    <div class="container">
+      <p class="section-label">TOOLS</p>
+
+      <div class="tool-grid">
+        <!-- ツールは縦方向に並べています。順番を変えたい場合は、この4つのブロックを入れ替えてください。 -->
+        <a class="tool-card" href="scale.html">
+          <span class="tool-number">01 / SCALE</span>
+          <div>
+            <h2>縮尺計算</h2>
+            <p>図面と実寸の換算を手早く。</p>
+          </div>
+        </a>
+
+        <a class="tool-card" href="calculator.html">
+          <span class="tool-number">02 / CALCULATOR</span>
+          <div>
+            <h2>建築計算</h2>
+            <p>面積や体積などをまとめて計算。</p>
+          </div>
+        </a>
+
+        <a class="tool-card" href="law.html">
+          <span class="tool-number">03 / LAW</span>
+          <div>
+            <h2>法令検索</h2>
+            <p>課題で確認したい法令を探す。</p>
+          </div>
+        </a>
+
+        <a class="tool-card" href="materials.html">
+          <span class="tool-number">04 / MATERIAL</span>
+          <div>
+            <h2>素材検索</h2>
+            <p>パースに使える素材を探す。</p>
+          </div>
+        </a>
+      </div>
+    </div>
+  </section>
+<section class="section purpose-strip" aria-label="目的から探す"><div class="container"><div class="purpose-strip-head"><div><p class="section-label">TOOLBOX</p><h2>家・部屋・DIYでも使えます。</h2><p>建築の知識がなくても使える道具を、目的別にまとめています。</p></div><a class="button secondary" href="tools.html">目的から探す →</a></div><div class="purpose-strip-grid"><a class="purpose-card" href="tools.html?purpose=home"><small>01 / HOME</small><strong>家づくり</strong><span>土地・建物・外まわり</span><b>→</b></a><a class="purpose-card" href="tools.html?purpose=room"><small>02 / LIVING</small><strong>部屋・暮らし</strong><span>寸法・収納・明るさ</span><b>→</b></a><a class="purpose-card" href="tools.html?purpose=diy"><small>03 / DIY</small><strong>DIY・材料</strong><span>材料・勾配・費用</span><b>→</b></a><a class="purpose-card" href="tools.html?purpose=arch"><small>04 / ARCH</small><strong>建築・図面</strong><span>縮尺・図面・寸法</span><b>→</b></a></div></div></section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="container site-footer-inner">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <div class="footer-brand-name">建築ノード</div>
+        <p class="footer-brand-copy">図面を描くとき、課題で迷ったときに使える道具をまとめています。</p>
+      </div>
+
+      <div>
+        <div class="footer-heading">Navigation</div>
+        <nav class="footer-links" aria-label="フッターナビゲーション">
+          <a href="index.html">ホーム</a>
+          <a href="about.html">ABOUT</a>
+          <a href="search.html">サイト内検索</a>
+          <a href="scale.html">縮尺計算</a>
+          <a href="calculator.html">建築計算</a>
+          <a href="law.html">法令検索</a>
+          <a href="materials.html">素材検索</a><a href="tools.html">TOOLBOX</a>
+        </nav>
+      </div>
+
+      <div>
+        <div class="footer-heading">Information</div>
+        <div class="footer-links">
+          <a href="about.html">このサイトについて</a>
+          <a href="contact.html">お問い合わせ</a>
+          <a href="law.html">法令について</a>
+          <a href="updates.html">更新履歴</a>
+          <a href="about.html#disclaimer">免責事項</a>
+          <a href="about.html#privacy">プライバシー</a>
+        </div>
+      </div>
+
+      <div>
+        <div class="footer-heading">Contact</div>
+        <div class="footer-contact">
+          <div class="footer-contact-row">
+            <span class="footer-label">X / Twitter</span>
+            <a id="footerXLink" href="#" aria-label="X">未設定</a>
+          </div>
+          <div class="footer-contact-row">
+            <span class="footer-label">Email</span>
+            <a id="footerMailLink" href="#" aria-label="メール">未設定</a>
+          </div>
+          <div class="footer-contact-row">
+            <span class="footer-label">Response</span>
+            <span>お問い合わせは順次確認</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-meta">
+      <div class="footer-meta-left">
+        <span>© 2026 建築ノード</span>
+        <span>Version <strong data-site-version>v3.30</strong></span>
+        <span>最終更新 <strong data-site-updated>2026.09.04</strong></span>
+      </div>
+      <div class="footer-meta-right">
+        <span class="footer-status">ARCHITECTURE TOOLS</span>
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+
+<script src="script.js"></script>
+</body>
+</html>
