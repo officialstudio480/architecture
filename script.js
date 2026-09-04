@@ -887,3 +887,52 @@ document.addEventListener('DOMContentLoaded', () => {
   installResultImageButtons();
   installCompareButtons();
 });
+
+// ==============================
+// スマホ用ハンバーガーメニュー
+// ==============================
+
+document.addEventListener("DOMContentLoaded", () => {
+  const menuButton = document.querySelector(".menu-toggle");
+  const mobileMenu = document.querySelector(".mobile-menu");
+
+  if (!menuButton || !mobileMenu) return;
+
+  // メニューを開閉
+  menuButton.addEventListener("click", () => {
+    const isOpen = mobileMenu.classList.toggle("is-open");
+
+    menuButton.classList.toggle("is-open", isOpen);
+    menuButton.setAttribute("aria-expanded", isOpen);
+  });
+
+  // メニュー内のリンクを押したら閉じる
+  mobileMenu.querySelectorAll("a").forEach((link) => {
+    link.addEventListener("click", () => {
+      mobileMenu.classList.remove("is-open");
+      menuButton.classList.remove("is-open");
+      menuButton.setAttribute("aria-expanded", "false");
+    });
+  });
+
+  // メニュー外をクリックしたら閉じる
+  document.addEventListener("click", (event) => {
+    if (
+      !mobileMenu.contains(event.target) &&
+      !menuButton.contains(event.target)
+    ) {
+      mobileMenu.classList.remove("is-open");
+      menuButton.classList.remove("is-open");
+      menuButton.setAttribute("aria-expanded", "false");
+    }
+  });
+
+  // Escキーで閉じる
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") {
+      mobileMenu.classList.remove("is-open");
+      menuButton.classList.remove("is-open");
+      menuButton.setAttribute("aria-expanded", "false");
+    }
+  });
+});
