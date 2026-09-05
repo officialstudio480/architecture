@@ -1,0 +1,201 @@
+/*
+  建築ノード 通常サイト用：スマホ・iPad中央揃え補正
+  maintenance/index.html 用ではありません。
+
+  既存の style.css の一番最後に追加してください。
+*/
+
+@media (max-width: 1024px) {
+
+  /* ページ見出し */
+  .page-heading,
+  .page-heading .eyebrow,
+  .page-heading h1,
+  .page-heading h2,
+  .page-heading p,
+  .section-intro,
+  .section-intro .section-label,
+  .section-intro h2,
+  .section-intro p {
+    text-align: center !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+  }
+
+  .page-heading {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  .page-heading h1,
+  .page-heading h2 {
+    width: 100% !important;
+    white-space: nowrap !important;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .page-heading p:not(.eyebrow),
+  .section-intro p {
+    max-width: 760px;
+  }
+
+  /* 通常のツールカード */
+  .tool-card {
+    position: relative;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    text-align: center !important;
+    width: 100%;
+  }
+
+  .tool-card h2,
+  .tool-card h3,
+  .tool-card p {
+    width: 100% !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    text-align: center !important;
+  }
+
+  /* 番号はカードの端に固定 */
+  .tool-card .tool-number,
+  .tool-card .number,
+  .tool-card .index {
+    position: absolute;
+    left: 20px;
+    top: 20px;
+    margin: 0 !important;
+    text-align: left !important;
+  }
+
+  /* お気に入りボタンは右上 */
+  .tool-card .node-favorite,
+  .tool-card .favorite,
+  .tool-card .favorite-btn,
+  .tool-card .star {
+    position: absolute;
+    right: 16px;
+    top: 16px;
+    margin: 0 !important;
+  }
+
+  /* カード内コンテンツ */
+  .tool-card > .tool-content,
+  .tool-card > .card-content,
+  .tool-card > .content {
+    width: 100% !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    text-align: center !important;
+  }
+
+  /* グリッド */
+  .tool-grid,
+  .tool-grid-extended,
+  .toolbox-grid,
+  .next-links,
+  .cards-grid,
+  .card-grid {
+    width: 100%;
+  }
+
+  /* タイトルの折り返し防止 */
+  .tool-card h2,
+  .tool-card h3 {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+@media (max-width: 760px) {
+
+  .container {
+    width: min(100% - 32px, var(--max-width));
+  }
+
+  /* トップ */
+  .hero {
+    min-height: 500px;
+  }
+
+  .hero-inner {
+    width: 100%;
+    max-width: 100%;
+    padding-left: 0;
+    padding-right: 0;
+    text-align: center;
+  }
+
+  .hero .eyebrow,
+  .hero h1,
+  .hero p:not(.eyebrow) {
+    margin-left: auto !important;
+    margin-right: auto !important;
+    text-align: center !important;
+  }
+
+  .hero h1 {
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: clamp(34px, 9vw, 56px);
+  }
+
+  .hero p:not(.eyebrow) {
+    max-width: 620px;
+  }
+
+  /* 2列カードを縦積みに */
+  .tool-grid,
+  .tool-grid-extended,
+  .toolbox-grid,
+  .next-links {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* 目的セクション */
+  .purpose-strip-grid {
+    grid-template-columns: 1fr 1fr !important;
+  }
+
+  .purpose-strip-head {
+    align-items: center !important;
+    text-align: center !important;
+  }
+
+  /* ヘッダー */
+  .header-inner {
+    min-height: 64px;
+  }
+
+  .main-nav {
+    justify-content: center;
+  }
+}
+
+@media (max-width: 390px) {
+
+  .container {
+    width: calc(100% - 24px);
+  }
+
+  .page-heading h1,
+  .page-heading h2 {
+    font-size: 1.7rem !important;
+  }
+
+  .tool-card h2,
+  .tool-card h3 {
+    font-size: 1.35rem !important;
+    letter-spacing: -0.03em;
+  }
+
+  .hero h1 {
+    font-size: 31px;
+  }
+}
